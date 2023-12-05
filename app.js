@@ -94,9 +94,9 @@ function mainMenu(person, people) {
 		displayPersonInfo(person);
 			break;
 		case 'family':
-			displayPeople('Family', personFamily)
+			displayPeople('Family',personFamily);
 			// let personFamily = findPersonFamily(person, people);
-			
+			// search for parents, spouse and siblings.
 			break;
 		case 'descendants':
 			//! TODO
@@ -113,11 +113,12 @@ function mainMenu(person, people) {
 }
 
 function displayPeople(displayTitle, peopleToDisplay) {
-	const formatedPeopleDisplayText = peopleToDisplay
+	const personFamily=findPersonFamily(person,people)
 		.map((person) => `${person.firstName} ${person.lastName}`)
 		.join('\n');
 	alert(`${displayTitle}\n\n${formatedPeopleDisplayText}`);
 }
+
 
 function displayPersonInfo(person){     
 	const formattedInfoText = formattedPersonInfo(person);
@@ -131,14 +132,20 @@ function formattedPersonInfo(person){
 	Gender: ${person.gender}
 	DOB: ${person.dob}
 	Height:${person.height}
-	Weight${person.weight}
+	Weight:${person.weight}
     EyeColor: ${person.eyeColor}
 	Occupation: ${person.occupation}
 	`;
 	return formattedInfoText;
 }
-
-
+/*
+function displayPeople(displayTitle, peopleToDisplay) {
+	const formatedPeopleDisplayText = peopleToDisplay
+		.map((person) => `${person.firstName} ${person.lastName}`)
+		.join('\n');
+	alert(`${displayTitle}\n\n${formatedPeopleDisplayText}`);
+}
+*/
 
 function validatedPrompt(message, acceptableAnswers) {
 	acceptableAnswers = acceptableAnswers.map((aa) => aa.toLowerCase());
