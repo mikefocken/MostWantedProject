@@ -38,8 +38,8 @@ function searchPeopleDataSet(people) {
 			results = searchByName(people);
 			break;
 		case 'trait':
-			 results = searchByTrait(people);//! TODO
-			// results = searchByTraits(people);
+			 results = searchByTrait(people);
+			
 			break;
 		default:
 			return searchPeopleDataSet(people);
@@ -73,11 +73,13 @@ function searchByTrait(people) {
 		const eyeColorTraitToSearchFor = prompt(
 		'Please enter the eye color of the person or persons you are searching for.',
 	);
-	const fullNameSearchResults = people.filter(
+	const searchByTraitResults = people.filter(
 		(person) =>
 			person.gender.toLowerCase() === genderTraitToSearchFor.toLowerCase() &&
 			person.eyeColor.toLowerCase() === eyeColorTraitToSearchFor.toLowerCase(),
-	);
+	)
+
+		.map((person) => ({id:person.id,firstName: person.firstName, lastName: person.lastName}));
 	return searchByTraitResults;
 }
 function mainMenu(person, people) {
