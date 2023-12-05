@@ -29,7 +29,6 @@ function searchPeopleDataSet(people) {
 		'Please enter in what type of search you would like to perform.',
 		['id', 'name', 'trait'],
 	);
-
 	let results = [];
 	switch (searchTypeChoice) {
 		case 'id':
@@ -39,23 +38,20 @@ function searchPeopleDataSet(people) {
 			results = searchByName(people);
 			break;
 		case 'trait':
-			//! TODO
+			 results = searchByTrait(people);//! TODO
 			// results = searchByTraits(people);
 			break;
 		default:
 			return searchPeopleDataSet(people);
 	}
-
 	return results;
 }
-
 function searchById(people) {
 	const idToSearchForString = prompt('Please enter the id of the person you are searching for.');
 	const idToSearchForInt = parseInt(idToSearchForString);
 	const idFilterResults = people.filter((person) => person.id === idToSearchForInt);
 	return idFilterResults;
 }
-
 function searchByName(people) {
 	const firstNameToSearchFor = prompt(
 		'Please enter the the first name of the person you are searching for.',
@@ -70,22 +66,35 @@ function searchByName(people) {
 	);
 	return fullNameSearchResults;
 }
-
+function searchByTrait(people) {
+	const genderTraitToSearchFor = prompt(
+		'Please enter the gender of the person or persons you are searching for.',
+	);
+		const eyeColorTraitToSearchFor = prompt(
+		'Please enter the eye color of the person or persons you are searching for.',
+	);
+	const fullNameSearchResults = people.filter(
+		(person) =>
+			person.gender.toLowerCase() === genderTraitToSearchFor.toLowerCase() &&
+			person.eyeColor.toLowerCase() === eyeColorTraitToSearchFor.toLowerCase(),
+	);
+	return searchByTraitResults;
+}
 function mainMenu(person, people) {
 	const mainMenuUserActionChoice = validatedPrompt(
 		`Person: ${person.firstName} ${person.lastName}\n\nDo you want to know their full information, family, or descendants?`,
 		['info', 'family', 'descendants', 'quit'],
 	);
 
+
 	switch (mainMenuUserActionChoice) {
 		case 'info':
-			//! TODO
-			// displayPersonInfo(person);
+		displayPersonInfo(person);
 			break;
 		case 'family':
-			//! TODO
+			displayPeople('Family', personFamily)
 			// let personFamily = findPersonFamily(person, people);
-			// displayPeople('Family', personFamily);
+			
 			break;
 		case 'descendants':
 			//! TODO
@@ -107,6 +116,27 @@ function displayPeople(displayTitle, peopleToDisplay) {
 		.join('\n');
 	alert(`${displayTitle}\n\n${formatedPeopleDisplayText}`);
 }
+
+function displayPersonInfo(person){     
+	const formattedInfoText = formattedPersonInfo(person);
+	alert(formattedInfoText)
+}
+function formattedPersonInfo(person){
+	const formattedInfoText= `
+	ID:${person.id} 
+	First Name:${person.firstName} 
+	Last Name:${person.lastName}
+	Gender: ${person.gender}
+	DOB: ${person.dob}
+	Height:${person.height}
+	Weight${person.weight}
+    EyeColor: ${person.eyeColor}
+	Occupation: ${person.occupation}
+	`;
+	return formattedInfoText;
+}
+
+
 
 function validatedPrompt(message, acceptableAnswers) {
 	acceptableAnswers = acceptableAnswers.map((aa) => aa.toLowerCase());
