@@ -91,10 +91,11 @@ function mainMenu(person, people) {
 
 	switch (mainMenuUserActionChoice) {
 		case 'info':
-		displayPersonInfo(person);
+		  displayPersonInfo(person);
 			break;
 		case 'family':
-			displayPeople(person);
+		 let personFamily = findPersonFamily(person, people);
+		 displayPeople(family,personFamily);
 			// let personFamily = findPersonFamily(person, people);
 			// search for parents, spouse and siblings.
 			break;
@@ -109,51 +110,63 @@ function mainMenu(person, people) {
 			alert('Invalid input. Please try again.');
 	}
 
-	return mainMenu(person, people);
+	return mainMenu(person,people);
+}
+function displayPeople(personFamily) {
+    const formattedFamilyText = formattedFamilyInfo(personFamily);
+    alert(formattedFamilyText);
 }
 
-function displayPeople(person,personFamily) {
-	let personFamily=findPersonFamily(person,people);
-	alert(personFamily)	
+function findPersonFamily(person, people) {
+    let family={};
+    if (person.currentSpouse) {
+        const spouse = people.find((p) => p.id === person.currentSpouse);
+        spouseInfo = `
+            Spouse:
+            SpouseID: ${spouse.id}
+            Spouse First Name: ${spouse.firstName}
+            Spouse Last Name: ${spouse.lastName}
+            Spouse Gender: ${spouse.gender}
+            Spouse DOB: ${spouse.dob} 
+            Spouse Height: ${spouse.height}
+            Spouse Weight: ${spouse.weight}
+            Spouse EyeColor: ${spouse.eyeColor}
+            Spouse Occupation: ${spouse.occupation}`;
+    }
+
+    if (person.parents.length > 0) {
+        parentInfo = "Parents:";
+        person.parents.forEach((parentId) => {
+            const parent = people.find((p) => p.id === parentId);
+            parentInfo += `
+                ParentID: ${parent.id}
+                Parent First Name: ${parent.firstName}
+                Parent Last Name: ${parent.lastName}
+                Parent Gender: ${parent.gender}
+                Parent DOB: ${parent.dob} 
+                Parent Height: ${parent.height}
+                Parent Weight: ${parent.weight}
+                Parent EyeColor: ${parent.eyeColor}
+                Parent Occupation: ${parent.occupation}`;
+        });
+    }
+
+    return { spouseInfo, parentInfo };
 }
 
-function findPersonFamily(person,people){
-	personFamily=findPersonFamily(person, people);
-	let spouseInfo="";
-	let parentsInfo ="";
-	let SiblingInfo ="";
-
-	if (person.currentSpouse){
-		const spouse =people.find(people=>people.id=== person.currentSpouse);
-		spouseInfo=`
-		Spouse:
-		SpouseID: ${spouse.id}
-		Spouce First Name: 
-		Spouce Last Name : ${spouse.lastName}
-		`;
-	}
-
-	if (person.parents.length >0){
-		parentsInfo ="Parent";
-		person.parents.foreach(parentId => {
-			const parent =people.find(people => people.id === parentId);
-			parentsInfo +=`
-			Parent Id: ${parent.id}
-			Parent First Name: ${parent.firstName}
-			Parent Last Name: ${parent.lastName}
-			`;
-		});
-	}
-		const familyInfo=spouseInfo +"\n"+parentsInfo;
-		return familyInfo ();
+function formattedFamilyInfo(personFamily) {
+    const { spouseInfo, parentInfo } = personFamily;
+    return personFamily;
 }
+
+
 
 function displayPersonInfo(person){     
 	const formattedInfoText = formattedPersonInfo(person);
 	alert(formattedInfoText)
 }
 function formattedPersonInfo(person){
-	const formattedInfoText= `
+	const formattedInfoText = `
 	ID:${person.id} 
 	First Name:${person.firstName} 
 	Last Name:${person.lastName}
@@ -166,14 +179,6 @@ function formattedPersonInfo(person){
 	`;
 	return formattedInfoText;
 }
-/*
-function displayPeople(displayTitle, peopleToDisplay) {
-	const formatedPeopleDisplayText = peopleToDisplay
-		.map((person) => `${person.firstName} ${person.lastName}`)
-		.join('\n');
-	alert(`${displayTitle}\n\n${formatedPeopleDisplayText}`);
-}
-*/
 
 function validatedPrompt(message, acceptableAnswers) {
 	acceptableAnswers = acceptableAnswers.map((aa) => aa.toLowerCase());
