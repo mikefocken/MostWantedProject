@@ -141,26 +141,24 @@ function findParents(parentIds, people) {
     return parentIds.map((parentId) => people.find((p) => p.id === parentId));
 }
 
+
 function findSiblings(person, people) {
     const parentIds = person.parents;
     const siblings = [];
 
     if (parentIds && parentIds.length > 0) {
         parentIds.forEach((parentId) => {
-            const parent = people.find((p) => p.id === parentId);
-
-            if (parent) {
-                const parentSiblings = people.filter(
-                    (p) => p.id !== person.id && p.parents.includes(parentId)
-                );
-                siblings.push(...parentSiblings);
-            }
+            const parentSiblings = people.filter(
+                (p) =>
+                    p.id !== person.id &&
+                    p.parents.includes(parentId)
+            );
+            siblings.push(...parentSiblings);
         });
     }
 
     return siblings;
 }
-
 
 
 function formattedFamilyInfo(personFamily) {
@@ -176,13 +174,13 @@ function formattedFamilyInfo(personFamily) {
     } else {
         formattedText += "Parents: No parents found\n";
     }
-	if (siblings){
-		formattedText += formatPeopleInfo('Siblings',siblings);
-	}
+
+    if (siblings) {
+        formattedText += formatPeopleInfo('Siblings', siblings);
+    }
 
     return formattedText;
 }
-
 
 function formatPersonInfo(label, person) {
     return `
