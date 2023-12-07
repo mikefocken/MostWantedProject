@@ -161,6 +161,7 @@ function findSiblings(person, people) {
 }
 
 
+
 function formattedFamilyInfo(personFamily) {
     const { spouse, parents, siblings } = personFamily;
     let formattedText = "Family:\n\n";
