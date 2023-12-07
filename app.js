@@ -95,7 +95,7 @@ function mainMenu(person, people) {
 			break;
 		case 'family':
 		 let personFamily = findPersonFamily(person, people);
-		 displayPeople(family,personFamily);
+		 displayPeople(personFamily);
 			// let personFamily = findPersonFamily(person, people);
 			// search for parents, spouse and siblings.
 			break;
@@ -118,45 +118,88 @@ function displayPeople(personFamily) {
 }
 
 function findPersonFamily(person, people) {
-    let family={};
+    let family = {};
+
     if (person.currentSpouse) {
-        const spouse = people.find((p) => p.id === person.currentSpouse);
-        spouseInfo = `
-            Spouse:
-            SpouseID: ${spouse.id}
-            Spouse First Name: ${spouse.firstName}
-            Spouse Last Name: ${spouse.lastName}
-            Spouse Gender: ${spouse.gender}
-            Spouse DOB: ${spouse.dob} 
-            Spouse Height: ${spouse.height}
-            Spouse Weight: ${spouse.weight}
-            Spouse EyeColor: ${spouse.eyeColor}
-            Spouse Occupation: ${spouse.occupation}`;
+        family.spouse = findSpouse(person.currentSpouse, people);
     }
 
-    if (person.parents.length > 0) {
-        parentInfo = "Parents:";
-        person.parents.forEach((parentId) => {
+    if (person.parents && person.parents.length > 0) {
+        family.parents = findParents(person.parents, people);
+    }
+
+    family.siblings=findSiblings(person,people);
+
+    return family;
+}
+
+function findSpouse(spouseId, people) {
+    return people.find((p) => p.id === spouseId);
+}
+
+function findParents(parentIds, people) {
+    return parentIds.map((parentId) => people.find((p) => p.id === parentId));
+}
+
+function findSiblings(person, people) {
+    const parentIds = person.parents;
+    const siblings = [];
+
+    if (parentIds && parentIds.length > 0) {
+        parentIds.forEach((parentId) => {
             const parent = people.find((p) => p.id === parentId);
-            parentInfo += `
-                ParentID: ${parent.id}
-                Parent First Name: ${parent.firstName}
-                Parent Last Name: ${parent.lastName}
-                Parent Gender: ${parent.gender}
-                Parent DOB: ${parent.dob} 
-                Parent Height: ${parent.height}
-                Parent Weight: ${parent.weight}
-                Parent EyeColor: ${parent.eyeColor}
-                Parent Occupation: ${parent.occupation}`;
+
+            if (parent) {
+                const parentSiblings = people.filter(
+                    (p) => p.id !== person.id && p.parents.includes(parentId)
+                );
+                siblings.push(...parentSiblings);
+            }
         });
     }
 
-    return { spouseInfo, parentInfo };
+    return siblings;
 }
 
+
+
 function formattedFamilyInfo(personFamily) {
-    const { spouseInfo, parentInfo } = personFamily;
-    return personFamily;
+    const { spouse, parents, siblings } = personFamily;
+    let formattedText = "Family:\n\n";
+
+    if (spouse) {
+        formattedText += formatPersonInfo('Spouse', spouse);
+    }
+
+    if (parents && parents.length > 0) {
+        formattedText += formatPeopleInfo('Parents', parents);
+    } else {
+        formattedText += "Parents: No parents found\n";
+    }
+	if (siblings){
+		formattedText += formatPeopleInfo('Siblings',siblings);
+	}
+
+    return formattedText;
+}
+
+
+function formatPersonInfo(label, person) {
+    return `
+        ${label}:
+        ID: ${person.id}
+        First Name: ${person.firstName}
+        Last Name: ${person.lastName}
+        Gender: ${person.gender}
+        DOB: ${person.dob}
+        Height: ${person.height}
+        Weight: ${person.weight}
+        EyeColor: ${person.eyeColor}
+        Occupation: ${person.occupation}\n`;
+}
+
+function formatPeopleInfo(label, people) {
+    return `${label}:\n` + people.map((person) => formatPersonInfo('', person)).join('\n');
 }
 
 
